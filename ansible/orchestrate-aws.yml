@@ -1,0 +1,8 @@
+---
+- name: Orchestrate Osmosis Authority with AWS
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  roles:
+    - aws

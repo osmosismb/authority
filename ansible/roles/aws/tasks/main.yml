@@ -1,0 +1,40 @@
+---
+- name: Orchestrate ECS Cluster
+  cloudformation:
+    stack_name: "osmosis-authority-container-cluster"
+    state: "present"
+    region: "{{ aws_region }}"
+    template: "roles/aws/files/ecs.json"
+    template_parameters:
+      VpcId: "{{ aws_vpc_id }}"
+      IamInstanceRole: "{{ aws_iam_instance_role }}"
+      HostInstanceType: "{{ host_instance_type }}"
+      HostAMI: "{{ host_ami }}"
+      HostELBName: "osmosis-authority-elb"
+      KeyPair: "{{ lookup('env', 'AWS_KEY_PAIR') }}"
+
+- name: Orchestrate ElastiCache Cluster
+  cloudformation:
+    stack_name: "osmosis-authority-cache-cluster"
+    state: "present"
+    region: "{{ aws_region }}"
+    template: "roles/aws/files/elasticache.json"
+    template_parameters:
+      VpcId: "{{ aws_vpc_id }}"
+      CacheInstanceType: "{{ cache_instance_type }}"
+      CacheNodeCount: "{{ cache_node_count }}"
+      CacheEngine: "{{ cache_engine }}"
+
+- name: Orchestrate RDS Cluster
+  cloudformation:
+    stack_name: "osmosis-authority-db-cluster"
+    state: "present"
+    region: "{{ aws_region }}"
+    template: "roles/aws/files/rds.json"
+    template_parameters:
+      VpcId: "{{ aws_vpc_id }}"
+      DbInstanceType: "{{ db_instance_type }}"
+      DbName: "{{ db_name }}"
+      DbEngine: "{{ db_engine }}"
+      DbMasterUsername: "{{ db_master_username }}"
+      DbMasterPassword: "{{ db_master_password }}"

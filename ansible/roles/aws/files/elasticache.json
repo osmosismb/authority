@@ -1,0 +1,58 @@
+{
+  "Description": "Osmosis Authority ElastiCache Cluster",
+  "Parameters": {
+    "VpcId": {
+      "Type": "String"
+    },
+    "CacheInstanceType": {
+      "Type": "String",
+      "Default": "cache.t2.micro"
+    },
+    "CacheNodeCount": {
+      "Type": "String",
+      "Default": "1"
+    },
+    "CacheEngine": {
+      "Type": "String",
+      "Default": "redis"
+    }
+  },
+  "Resources": {
+    "CacheServer": {
+      "Type": "AWS::ElastiCache::CacheCluster",
+      "Properties": {
+        "CacheNodeType": { "Ref": "CacheInstanceType" },
+        "NumCacheNodes": { "Ref" : "CacheNodeCount" },
+        "Engine": { "Ref": "CacheEngine" },
+        "ClusterName": {
+          "Fn::Join": ["-",
+          [
+            "osmosis",
+            "authority",
+            { "Ref": "CacheEngine" },
+            "cache"
+            ]
+          ]
+        },
+        "VpcSecurityGroupIds": [
+          { "Ref": "CacheSecurityGroup" }
+        ]
+      }
+    },
+    "CacheSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "Osmosis Authority ElastiCache Security Group",
+        "VpcId": { "Ref": "VpcId" },
+        "SecurityGroupIngress": [
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "6379",
+            "ToPort": "6379",
+            "CidrIp": "172.31.0.0/16"
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "Description": "Osmosis Authority RDS Cluster",
+  "Parameters": {
+    "VpcId": {
+      "Type": "String"
+    },
+    "DbInstanceType": {
+      "Type": "String",
+      "Default": "db.t2.micro"
+    },
+    "DbEngine": {
+      "Type": "String",
+      "Default": "MySQL"
+    },
+    "DbName": {
+      "Type": "String",
+      "Default": "osmosis_authority"
+    },
+    "DbMasterUsername": {
+      "Type": "String"
+    },
+    "DbMasterPassword": {
+      "Type": "String"
+    }
+  },
+  "Resources": {
+    "OsmosisAuthorityDBServer": {
+      "Type": "AWS::RDS::DBInstance",
+      "Properties": {
+        "DBInstanceClass": { "Ref": "DbInstanceType" },
+        "DBInstanceIdentifier": {
+          "Fn::Join": ["-",
+          [
+            "osmosis",
+            "authority"
+            { "Ref": "DbEngine" },
+            { "Ref": "DbName" },
+            "db"
+            ]]
+        },
+        "DBName": { "Ref": "DbName" },
+        "AllocatedStorage": "5",
+        "Engine": { "Ref": "DbEngine" },
+        "MasterUsername": { "Ref": "DbMasterUsername" },
+        "MasterUserPassword": { "Ref": "DbMasterPassword" },
+        "MultiAZ": "true",
+        "VPCSecurityGroups": [
+          { "Ref": "OsmosisAuthorityDBSecurityGroup" }
+        ]
+      }
+    },
+    "OsmosisAuthorityDBSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "Osmosis Authority RDS Security Group",
+        "VpcId": { "Ref": "VpcId" },
+        "SecurityGroupIngress": [
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "3306",
+            "ToPort": "3306",
+            "CidrIp": "172.31.0.0/16"
+          }
+        ]
+      }
+    }
+  }
+}
