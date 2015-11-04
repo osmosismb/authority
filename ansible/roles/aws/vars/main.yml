@@ -1,15 +1,13 @@
 ---
 aws_region: [AWS REGION ID]
-aws_vpc_id: [AWS VPC ID]
-aws_iam_instance_role: [IAM ROLE]]
+aws_iam_instance_role: [AWS IAM ROLE]
 
 host_instance_type: t2.micro
 host_ami: ami-f1b46b82
-host_elb_name: osmosis-authority-elb
+host_elb_name: osm-auth-elb
 
 db_instance_type: db.t2.micro
 db_engine: MySQL
-db_name: osmosis_authority
 db_master_username: [USERNAME]
 db_master_password: [PASSWORD]
 

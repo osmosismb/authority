@@ -4,6 +4,12 @@
     "VpcId": {
       "Type": "String"
     },
+    "PublicSubnetAz1": {
+      "Type": "String"
+    },
+    "PublicSubnetAz2": {
+      "Type": "String"
+    },
     "CacheInstanceType": {
       "Type": "String",
       "Default": "cache.t2.micro"
@@ -18,28 +24,20 @@
     }
   },
   "Resources": {
-    "CacheServer": {
+    "OsmosisAuthorityCacheServer": {
       "Type": "AWS::ElastiCache::CacheCluster",
       "Properties": {
         "CacheNodeType": { "Ref": "CacheInstanceType" },
         "NumCacheNodes": { "Ref" : "CacheNodeCount" },
         "Engine": { "Ref": "CacheEngine" },
-        "ClusterName": {
-          "Fn::Join": ["-",
-          [
-            "osmosis",
-            "authority",
-            { "Ref": "CacheEngine" },
-            "cache"
-            ]
-          ]
-        },
+        "ClusterName": "osm-auth-cache",
+        "CacheSubnetGroupName": { "Ref": "OsmosisAuthorityCacheSubnetGroup" },
         "VpcSecurityGroupIds": [
-          { "Ref": "CacheSecurityGroup" }
+          { "Ref": "OsmosisAuthorityCacheSecurityGroup" }
         ]
       }
     },
-    "CacheSecurityGroup": {
+    "OsmosisAuthorityCacheSecurityGroup": {
       "Type": "AWS::EC2::SecurityGroup",
       "Properties": {
         "GroupDescription": "Osmosis Authority ElastiCache Security Group",
@@ -49,8 +47,18 @@
             "IpProtocol": "tcp",
             "FromPort": "6379",
             "ToPort": "6379",
-            "CidrIp": "172.31.0.0/16"
+            "CidrIp": "10.0.0.0/16"
           }
+        ]
+      }
+    },
+    "OsmosisAuthorityCacheSubnetGroup": {
+      "Type": "AWS::ElastiCache::SubnetGroup",
+      "Properties": {
+        "Description": "Subnet Group for the ElastiCache Cluster",
+        "SubnetIds": [
+          { "Ref": "PublicSubnetAz1" },
+          { "Ref": "PublicSubnetAz2"}
         ]
       }
     }

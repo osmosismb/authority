@@ -1,40 +1,44 @@
 ---
 - name: Orchestrate ECS Cluster
   cloudformation:
-    stack_name: "osmosis-authority-container-cluster"
+    stack_name: "osm-auth-hosts"
     state: "present"
     region: "{{ aws_region }}"
     template: "roles/aws/files/ecs.json"
     template_parameters:
-      VpcId: "{{ aws_vpc_id }}"
       IamInstanceRole: "{{ aws_iam_instance_role }}"
       HostInstanceType: "{{ host_instance_type }}"
       HostAMI: "{{ host_ami }}"
       HostELBName: "osmosis-authority-elb"
       KeyPair: "{{ lookup('env', 'AWS_KEY_PAIR') }}"
+  register: ecs
+
+- name: Debug
+  debug: msg="Stack outputs are {{ ecs.stack_outputs }}"
 
 - name: Orchestrate ElastiCache Cluster
   cloudformation:
-    stack_name: "osmosis-authority-cache-cluster"
+    stack_name: "osm-auth-cache"
     state: "present"
     region: "{{ aws_region }}"
     template: "roles/aws/files/elasticache.json"
     template_parameters:
-      VpcId: "{{ aws_vpc_id }}"
+      VpcId: "{{ ecs.stack_outputs.VpcId }}"
+      PublicSubnetAz1: "{{ ecs.stack_outputs.PublicSubnetAz1 }}"
+      PublicSubnetAz2: "{{ ecs.stack_outputs.PublicSubnetAz2 }}"
       CacheInstanceType: "{{ cache_instance_type }}"
       CacheNodeCount: "{{ cache_node_count }}"
       CacheEngine: "{{ cache_engine }}"
 
 - name: Orchestrate RDS Cluster
   cloudformation:
-    stack_name: "osmosis-authority-db-cluster"
+    stack_name: "osm-auth-db"
     state: "present"
     region: "{{ aws_region }}"
     template: "roles/aws/files/rds.json"
     template_parameters:
-      VpcId: "{{ aws_vpc_id }}"
+      VpcId: "{{ ecs.stack_outputs.VpcId }}"
       DbInstanceType: "{{ db_instance_type }}"
-      DbName: "{{ db_name }}"
       DbEngine: "{{ db_engine }}"
       DbMasterUsername: "{{ db_master_username }}"
       DbMasterPassword: "{{ db_master_password }}"

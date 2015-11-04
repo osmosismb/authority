@@ -14,9 +14,6 @@
     }
   },
   "Parameters": {
-    "VpcId": {
-      "Type": "String"
-    },
     "ClusterName": {
       "Type": "String",
       "Default": "osmosis_authority"
@@ -39,10 +36,21 @@
     }
   },
   "Resources": {
+    "OsmosisAuthorityVpc": {
+      "Type": "AWS::EC2::VPC",
+      "Properties": {
+        "CidrBlock": { "Fn::FindInMap": [
+            "VpcCidrs",
+            { "Ref": "AWS::Region" },
+            "vpc"
+          ]
+        }
+      }
+    },
     "OsmosisAuthorityPubSubnetAz1": {
       "Type": "AWS::EC2::Subnet",
       "Properties": {
-        "VpcId": { "Ref": "VpcId" },
+        "VpcId": { "Ref": "OsmosisAuthorityVpc" },
         "CidrBlock": { "Fn::FindInMap": [ "VpcCidrs", { "Ref": "AWS::Region" }, "pubsubnet1" ]},
         "AvailabilityZone": {
           "Fn::Select": ["0", { "Fn::GetAZs": { "Ref": "AWS::Region" } }]
@@ -52,7 +60,7 @@
     "OsmosisAuthorityPubSubnetAz2": {
       "Type": "AWS::EC2::Subnet",
       "Properties": {
-        "VpcId": { "Ref": "VpcId" },
+        "VpcId": { "Ref": "OsmosisAuthorityVpc" },
         "CidrBlock": { "Fn::FindInMap": [ "VpcCidrs", { "Ref": "AWS::Region" }, "pubsubnet2" ]},
         "AvailabilityZone": {
           "Fn::Select": ["1", { "Fn::GetAZs": { "Ref": "AWS::Region" } }]
@@ -60,19 +68,27 @@
       }
     },
     "OsmosisAuthorityInternetGateway": {
-      "Type": "AWS::EC2::InternetGateway"
+      "Type": "AWS::EC2::InternetGateway",
+      "Properties": {
+        "Tags": [
+          {
+            "Key": "Application",
+            "Value": "osmosis_authority"
+          }
+        ]
+      }
     },
     "OsmosisAuthorityAttachGateway": {
       "Type": "AWS::EC2::VPCGatewayAttachment",
       "Properties": {
-        "VpcId": { "Ref": "VpcId" },
+        "VpcId": { "Ref": "OsmosisAuthorityVpc" },
         "InternetGatewayId": { "Ref": "OsmosisAuthorityInternetGateway" }
       }
     },
     "OsmosisAuthorityRouteTable": {
       "Type": "AWS::EC2::RouteTable",
       "Properties": {
-        "VpcId": { "Ref": "VpcId" }
+        "VpcId": { "Ref": "OsmosisAuthorityVpc" }
       }
     },
     "OsmosisAuthorityPublicRoute": {
@@ -128,7 +144,19 @@
     "OsmosisAuthorityHostASG": {
       "Type": "AWS::AutoScaling::AutoScalingGroup",
       "Properties": {
-        "AvailabilityZones": { "Fn::GetAZs": "" },
+        "AvailabilityZones": [
+          { "Fn::Select" : [ "0", { "Fn::GetAZs" : { "Ref" : "AWS::Region" } } ] },
+          { "Fn::Select" : [ "1", { "Fn::GetAZs" : { "Ref" : "AWS::Region" } } ] }
+        ],
+        "VPCZoneIdentifier": [
+          {
+            "Fn::Join": [",", [
+                { "Ref" : "OsmosisAuthorityPubSubnetAz1" },
+                { "Ref" : "OsmosisAuthorityPubSubnetAz2" }
+              ]
+            ]
+          }
+        ],
         "LaunchConfigurationName": { "Ref": "OsmosisAuthorityHostInstance" },
         "Tags": [
           {
@@ -168,7 +196,7 @@
       "Type": "AWS::EC2::SecurityGroup",
       "Properties": {
         "GroupDescription": "Osmosis Authority ECS Security Group",
-        "VpcId": { "Ref": "VpcId" },
+        "VpcId": { "Ref": "OsmosisAuthorityVpc" },
         "SecurityGroupIngress": [
           {
             "IpProtocol": "tcp",
@@ -185,7 +213,7 @@
       "Type": "AWS::EC2::SecurityGroup",
       "Properties": {
         "GroupDescription": "Osmosis Authority ELB Security Group",
-        "VpcId": { "Ref": "VpcId" },
+        "VpcId": { "Ref": "OsmosisAuthorityVpc" },
         "SecurityGroupIngress": [
           {
             "IpProtocol": "tcp",
@@ -200,7 +228,15 @@
   "Outputs": {
     "VpcId": {
       "Description": "Osmosis Authority VPC",
-      "Value": { "Ref": "VpcId" }
+      "Value": { "Ref": "OsmosisAuthorityVpc" }
+    },
+    "PublicSubnetAz1": {
+      "Description": "Osmosis Authority Public Subnet AZ1",
+      "Value": { "Ref": "OsmosisAuthorityPubSubnetAz1" }
+    },
+    "PublicSubnetAz2": {
+      "Description": "Osmosis Authority Public Subnet AZ2",
+      "Value": { "Ref": "OsmosisAuthorityPubSubnetAz2" }
     }
   }
 }
