@@ -4,6 +4,12 @@
     "VpcId": {
       "Type": "String"
     },
+    "PublicSubnetAz1": {
+      "Type": "String"
+    },
+    "PublicSubnetAz2": {
+      "Type": "String"
+    },
     "DbInstanceType": {
       "Type": "String",
       "Default": "db.t2.micro"
@@ -35,6 +41,10 @@
         "MasterUsername": { "Ref": "DbMasterUsername" },
         "MasterUserPassword": { "Ref": "DbMasterPassword" },
         "MultiAZ": "true",
+        "DBSubnetGroupName":
+        {
+          "Ref": "OsmosisAuthorityDBSubnetGroup"
+        },
         "VPCSecurityGroups": [
           { "Ref": "OsmosisAuthorityDBSecurityGroup" }
         ]
@@ -52,6 +62,16 @@
             "ToPort": "3306",
             "CidrIp": "10.0.0.0/16"
           }
+        ]
+      }
+    },
+    "OsmosisAuthorityDBSubnetGroup": {
+      "Type": "AWS::RDS::DBSubnetGroup",
+      "Properties": {
+        "DBSubnetGroupDescription": "Subnet Group for the RDS Cluster",
+        "SubnetIds": [
+          { "Ref": "PublicSubnetAz1" },
+          { "Ref": "PublicSubnetAz2" }
         ]
       }
     }

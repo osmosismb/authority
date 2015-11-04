@@ -38,6 +38,8 @@
     template: "roles/aws/files/rds.json"
     template_parameters:
       VpcId: "{{ ecs.stack_outputs.VpcId }}"
+      PublicSubnetAz1: "{{ ecs.stack_outputs.PublicSubnetAz1 }}"
+      PublicSubnetAz2: "{{ ecs.stack_outputs.PublicSubnetAz2 }}"
       DbInstanceType: "{{ db_instance_type }}"
       DbEngine: "{{ db_engine }}"
       DbMasterUsername: "{{ db_master_username }}"
