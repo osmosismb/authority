@@ -1,0 +1,6 @@
+---
+- name: Vagrant provisioner
+  hosts: all
+  sudo: true
+  roles:
+    - vagrant

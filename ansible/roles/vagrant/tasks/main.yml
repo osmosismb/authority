@@ -1,0 +1,51 @@
+---
+- name: Install packages
+  yum: name={{ item }} state=present
+  with_items:
+    - httpd
+    - MySQL-python
+    - mysql-server
+    - php
+    - php-mysql
+  notify:
+    - restart mysqld
+    - restart httpd
+
+- name: Start services
+  service: name={{ item }} state=started
+  with_items:
+    - httpd
+    - mysqld
+
+- name: Add MySQL user
+  mysql_user:
+    login_user: root
+    login_password: ""
+    name: osm
+    password: osm
+    priv: "*.*:ALL,GRANT"
+    state: present
+
+- name: Add MySQL database
+  mysql_db:
+    name: osm_auth
+    state: present
+    login_user: osm
+    login_password: osm
+
+- name: Add vhost config
+  copy: src=vhost.conf dest=/etc/httpd/conf.d/00-osmosis-auth.conf mode=0644
+
+- name: Create vhost directory
+  file: path=/var/www/vhosts/osmosis.authority state=directory
+
+- name: Check existing app directory
+  stat: path=/var/www/vhosts/osmosis.authority/httpdocs
+  register: app_dir
+
+- name: Remove existing app directory
+  file: path=/var/www/vhosts/osmosis.authority/httpdocs state=absent
+  when: app_dir.stat.exists == True
+
+- name: Copy app folder
+  command: cp -r /vagrant /var/www/vhosts/osmosis.authority/httpdocs
