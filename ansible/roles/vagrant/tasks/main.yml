@@ -7,6 +7,7 @@
     - mysql-server
     - php
     - php-mysql
+    - phpMyAdmin
   notify:
     - restart mysqld
     - restart httpd
@@ -33,6 +34,12 @@
     login_user: osm
     login_password: osm
 
+- name: Add MySQL user table
+  mysql_db:
+    name: osm_auth
+    state: import
+    target: /vagrant/schemas/users.sql
+
 - name: Add vhost config
   copy: src=vhost.conf dest=/etc/httpd/conf.d/00-osmosis-auth.conf mode=0644
 
@@ -47,5 +54,11 @@
   file: path=/var/www/vhosts/osmosis.authority/httpdocs state=absent
   when: app_dir.stat.exists == True
 
+- name: Create app config directory
+  file: path=/etc/osm state=directory
+
+- name: Add app config
+  copy: src=conf.ini dest=/etc/osm/conf.ini mode=0644
+
 - name: Copy app folder
-  command: cp -r /vagrant /var/www/vhosts/osmosis.authority/httpdocs
+  command: cp -r /vagrant/httpdocs /var/www/vhosts/osmosis.authority/httpdocs
