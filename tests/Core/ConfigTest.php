@@ -24,7 +24,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
   {
     $config = new Config();
 
-    $value = $config->get('auth_store');
+    $value = $config->get('db_host');
 
     $this->assertNotNull($value);
   }
