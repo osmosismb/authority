@@ -4,6 +4,8 @@ var babelify = require('babelify');
 var source = require('vinyl-source-stream');
 var uglify = require('gulp-uglify');
 var streamify = require('gulp-streamify');
+var rimraf = require('gulp-rimraf');
+var ignore = require('gulp-ignore');
 
 var compass = require('gulp-compass');
 var sass = require('gulp-sass');
@@ -36,6 +38,12 @@ gulp.task('styles', function() {
         .pipe(gulp.dest('httpdocs'));
 });
 
+gulp.task('clean', function() {
+  return gulp.src('./httpdocs/**/*', { read: false })
+    .pipe(ignore('index.php'))
+    .pipe(rimraf());
+});
+
 gulp.task('watch', function() {
     gulp.watch([
         'src/js/**/*.jsx',
@@ -51,7 +59,13 @@ gulp.task('watch', function() {
 });
 
 gulp.task('build', ['styles', 'scripts'], function() {
-  gulp.src('src/php/**/*.php')
+  var files = [
+    './src/php/**/*.php',
+    './vendor/**/*',
+    './templates/**/*.php'
+  ];
+
+  gulp.src(files, { base: './' })
     .pipe(gulp.dest('httpdocs'));
 });
 

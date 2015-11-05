@@ -10,16 +10,18 @@ class Application
   }
 
   public function setupRoutes() {
-    $this->slim->get('/', function($name) {
-      $this->slim->render('Templates/index.php');
+    $slim = $this->slim;
+
+    $slim->get('/', function() use ($slim) {
+      $slim->render('home.php');
     });
 
-    $this->slim->get('/api/users/', function() {
-
+    $slim->get('/api/users/', function() {
+      echo 'api/users';
     });
 
-    $this->slim->get('/api/users/:hash', function($hash) {
-
+    $slim->get('/api/users/:hash', function($hash) {
+      echo 'api/users/hash';
     });
   }
 
