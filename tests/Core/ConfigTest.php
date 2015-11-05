@@ -28,4 +28,22 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
 
     $this->assertNotNull($value);
   }
+
+  /**
+  * @expectedException ErrorException
+  */
+  public function testConfigException()
+  {
+    $config = new Config('this_doesnt_exist');
+  }
+
+  /**
+  * @expectedException ErrorException
+  */
+  public function testKeyException()
+  {
+    $config = new Config();
+
+    $value = $config->get('this_doesnt_exist');
+  }
 }

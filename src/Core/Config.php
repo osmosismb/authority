@@ -31,7 +31,7 @@ class Config
       return $this->settings[$key];
     }
 
-    throw new Exception('Key not found in the configuration settings array.');
+    throw new \ErrorException('Key not found in the configuration settings array.');
   }
 
   public function getEnv()
@@ -42,6 +42,11 @@ class Config
   protected function initialize()
   {
     $configFile = parse_ini_file('/etc/osm/conf.ini', true);
+
+    if (!array_key_exists($this->environment, $configFile)) {
+      throw new \ErrorException('Key not found in the configuration file. Check your APPLICATION_ENV?');
+    }
+
     $this->settings = $configFile[$this->environment];
   }
 }
