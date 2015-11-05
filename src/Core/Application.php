@@ -1,5 +1,5 @@
 <?php
-namespace OsmosisAuthority;
+namespace Core;
 
 class Application
 {

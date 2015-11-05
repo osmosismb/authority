@@ -1,7 +1,7 @@
 <?php
 namespace Tests;
 
-use OsmosisAuthority\Application;
+use Core\Application;
 
 class ApplicationTest extends \PHPUnit_Framework_TestCase
 {
