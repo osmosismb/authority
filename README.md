@@ -4,8 +4,6 @@ Osmosis Authority
 
 The authority application for the Osmosis distributed message board system. Used as the centralised location for a cell cluster to handle user authorisation and authentication.
 
-# License
-
 ## License
 
 MIT License (MIT)
