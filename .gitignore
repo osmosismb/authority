@@ -1,3 +1,4 @@
 /vendor/
 /conf.ini
 .vagrant/
+node_modules/

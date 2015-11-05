@@ -10,8 +10,16 @@ class Application
   }
 
   public function setupRoutes() {
-    $this->slim->get('/hello/:name', function($name) {
-      echo "Hello " . $name . ".";
+    $this->slim->get('/', function($name) {
+      $this->slim->render('Templates/index.php');
+    });
+
+    $this->slim->get('/api/users/', function() {
+
+    });
+
+    $this->slim->get('/api/users/:hash', function($hash) {
+
     });
   }
 
