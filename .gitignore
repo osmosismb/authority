@@ -2,3 +2,7 @@
 /conf.ini
 .vagrant/
 node_modules/
+httpdocs/vendor/
+httpdocs/templates/
+httpdocs/src/
+httpdocs/app.min.js
