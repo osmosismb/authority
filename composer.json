@@ -17,7 +17,9 @@
   },
   "autoload": {
     "psr-0": {
-      "Core\\": "src/"
+      "Core\\": "src/php/",
+      "Data\\": "src/php/",
+      "Slim\\": "src/php/"
     }
   }
 }
