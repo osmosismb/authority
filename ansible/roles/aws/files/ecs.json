@@ -141,6 +141,9 @@
         ]
       }
     },
+    "OsmosisAuthorityCluster": {
+      "Type": "AWS::ECS::Cluster"
+    },
     "OsmosisAuthorityHostASG": {
       "Type": "AWS::AutoScaling::AutoScalingGroup",
       "Properties": {
@@ -172,6 +175,49 @@
     },
     "OsmosisAuthorityHostInstance": {
       "Type": "AWS::AutoScaling::LaunchConfiguration",
+      "Metadata" : {
+        "AWS::CloudFormation::Init" : {
+          "config" : {
+
+            "commands" : {
+              "01_add_instance_to_cluster" : {
+                "command" : { "Fn::Join": [ "", [ "#!/bin/bash\n", "echo ECS_CLUSTER=", { "Ref": "OsmosisAuthorityCluster" }, " >> /etc/ecs/ecs.config" ] ] }
+              }
+            },
+
+            "files" : {
+              "/etc/cfn/cfn-hup.conf" : {
+                "content" : { "Fn::Join" : ["", [
+                  "[main]\n",
+                  "stack=", { "Ref" : "AWS::StackId" }, "\n",
+                  "region=", { "Ref" : "AWS::Region" }, "\n"
+                ]]},
+                "mode"    : "000400",
+                "owner"   : "root",
+                "group"   : "root"
+              },
+              "/etc/cfn/hooks.d/cfn-auto-reloader.conf" : {
+                "content": { "Fn::Join" : ["", [
+                  "[cfn-auto-reloader-hook]\n",
+                  "triggers=post.update\n",
+                  "path=Resources.ContainerInstances.Metadata.AWS::CloudFormation::Init\n",
+                  "action=/opt/aws/bin/cfn-init -v ",
+                  "         --stack ", { "Ref" : "AWS::StackName" },
+                  "         --resource ContainerInstances ",
+                  "         --region ", { "Ref" : "AWS::Region" }, "\n",
+                  "runas=root\n"
+                ]]}
+              }
+            },
+
+            "services" : {
+              "sysvinit" : {
+                "cfn-hup" : { "enabled" : "true", "ensureRunning" : "true", "files" : ["/etc/cfn/cfn-hup.conf", "/etc/cfn/hooks.d/cfn-auto-reloader.conf"] }
+              }
+            }
+          }
+        }
+      },
       "Properties": {
         "InstanceType": { "Ref": "HostInstanceType" },
         "ImageId": { "Ref": "HostAMI" },
@@ -185,7 +231,17 @@
           "Fn::Base64": {
             "Fn::Join": ["", [
               "#!/bin/bash\n",
-              "echo ECS_CLUSTER=", { "Ref": "ClusterName" }, " >> /etc/ecs/ecs.config"
+              "yum install -y aws-cfn-bootstrap\n",
+
+               "/opt/aws/bin/cfn-init -v ",
+               "         --stack ", { "Ref" : "AWS::StackName" },
+               "         --resource ContainerInstances ",
+               "         --region ", { "Ref" : "AWS::Region" }, "\n",
+
+               "/opt/aws/bin/cfn-signal -e $? ",
+               "         --stack ", { "Ref" : "AWS::StackName" },
+               "         --resource ECSAutoScalingGroup ",
+               "         --region ", { "Ref" : "AWS::Region" }, "\n"
               ]
             ]
           }
