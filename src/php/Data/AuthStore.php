@@ -17,6 +17,7 @@ class AuthStore
 
     $conn = $this->generateConnectionString($host, $db);
     $this->connection = new \PDO($conn, $user, $pass);
+    $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
   }
 
   public static function generateConnectionString($host, $db, $charset = 'utf8')
@@ -34,5 +35,32 @@ class AuthStore
     }
 
     return 'mysql:host=' . $host . ';dbname=' . $db . ';charset=' . $charset;
+  }
+
+  public function login($user, $pass)
+  {
+    $query = "SELECT username, password, salt, token FROM users
+      WHERE username = :user
+      LIMIT 1";
+
+    $params = array(
+      ':user' => $user
+    );
+
+    $cmd = $this->connection->prepare($query);
+    $cmd->execute($params);
+
+    $result = $cmd->fetch(PDO::FETCH_OBJ);
+    if (!$result) {
+      throw new \ErrorException('User not found.');
+    }
+
+    $pass = hash('sha512', $pass . $result['salt']);
+
+    if ($result['password'] != $pass) {
+      throw new \ErrorException('Incorrect username or password.');
+    }
+
+    return $result['token'];
   }
 }
