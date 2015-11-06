@@ -6,3 +6,4 @@ httpdocs/vendor/
 httpdocs/templates/
 httpdocs/src/
 httpdocs/app.min.js
+.DS_Store
