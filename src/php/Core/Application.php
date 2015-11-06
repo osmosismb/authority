@@ -15,14 +15,14 @@ class Application
   {
     $this->app = new \Slim\Slim();
 
-    $this->session =
-      new Slim_Middleware_SessionRedis(array(
-        'session.expires' => 3600,
-        'session.id' => $_COOKIE['session_cookie'],
-        'session.name' => 'session_cookie'
-      ));
-
-    $this->app->add($this->session);
+    // $this->session =
+    //   new Slim\Middleware\Slim_Middleware_SessionRedis(array(
+    //     'session.expires' => 3600,
+    //     'session.id' => $_COOKIE['session_cookie'],
+    //     'session.name' => 'session_cookie'
+    //   ));
+    //
+    // $this->app->add($this->session);
   }
 
   public function setupRoutes()
@@ -38,7 +38,7 @@ class Application
       $request = Slim::getInstance()->request();
       $body = json_decode($request->getBody());
 
-      if (!isset($body['username'] || !isset($body['password']))) {
+      if (!isset($body['username']) || !isset($body['password'])) {
         throw new \ErrorException('Username or password not set.');
       }
 
@@ -52,7 +52,7 @@ class Application
         $response->status(500);
         $response->body(json_encode(array(
           'success' => false,
-          'message' => $ex->getMessage();
+          'message' => $ex->getMessage()
         )));
 
         return;
@@ -89,7 +89,7 @@ class Application
         $response->status(500);
         $response->body(json_encode(array(
           'success' => false,
-          'message' => $ex->getMessage();
+          'message' => $ex->getMessage()
         )));
       }
 
