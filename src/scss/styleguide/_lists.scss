@@ -1,0 +1,13 @@
+ul, ol {
+  padding-left: rem($v-spacing-three-quarter);
+  margin-bottom: rem($v-spacing-three-quarter);
+
+  & & {
+    margin-top: rem($v-spacing-quarter);
+    margin-bottom: 0;
+  }
+}
+
+li {
+  margin-bottom: rem($v-spacing-quarter);
+}

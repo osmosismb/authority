@@ -1,0 +1,17 @@
+a {
+  @include transition(.3s);
+  display: block;
+
+  &:link, &:visited {
+    color: $body_copy;
+    text-decoration: none;
+  }
+
+  &:hover, &:focus {
+    cursor: pointer;
+  }
+
+  &:active {
+    color: $body_copy;
+  }
+}

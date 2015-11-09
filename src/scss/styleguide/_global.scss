@@ -1,0 +1,36 @@
+* {
+  margin-top: 0;
+}
+
+html {
+  overflow: scroll!important;
+}
+
+body {
+  font-size: rem($base-font-size);
+  line-height: 1.5;
+  font-family: $base-font-family;
+  font-weight: 100;
+  color: $body_copy;
+}
+
+p, blockquote, table, hr, pre {
+  margin-bottom: rem($v-spacing);
+}
+
+// Misc global styles
+.spacer-bottom {
+    margin-bottom:rem($v-spacing);
+}
+
+.no-display {
+    display: none;
+}
+
+.inline-block {
+    display: inline-block;
+}
+
+.full-width {
+    width: 100%;
+}

@@ -1,0 +1,95 @@
+input,
+textarea,
+select,
+button, input[type="submit"],
+.button, %button {
+    margin-bottom: rem($v-spacing-three-quarter);
+}
+
+input[type="text"],
+input[type="number"],
+input[type="password"],
+input[type="email"],
+textarea,
+select {
+    font-family: $base-font-family;
+    font-size: rem($base-font-size);
+    @include border-radius(rem(3px));
+    max-width: 100%;
+    width: 100%;
+    color: $body_copy;
+    border: 1px solid #DADADA;
+    @include transition(.3s);
+
+    &:focus {
+
+    }
+}
+
+input[type="text"],
+input[type="number"],
+input[type="password"],
+input[type="email"] {
+    line-height: 1.6;
+    padding: rem($v-spacing-quarter);
+}
+
+textarea:focus, input:focus{
+     outline-color: none;
+}
+
+textarea {
+    padding: rem($v-spacing-quarter);
+}
+
+label {
+    display: block;
+    margin-bottom: rem(3px);
+
+    input + & {
+        display: inline-block;
+        margin-bottom: 0;
+        margin-left: rem($v-spacing-quarter);
+    }
+
+    :checked + & {
+        font-weight: 300;
+        font-style: italic;
+    }
+
+}
+
+.input-box + label {
+    margin-bottom: rem($v-spacing-half);
+    vertical-align: top;
+}
+
+button, input[type="submit"],
+.button, %button {
+    background: #6db5e5;
+    color: #fff;
+    font-weight: 300;
+    line-height: 1.39;
+    text-align: center;
+    padding: rem($v-spacing-quarter) rem($v-spacing-three-quarter);
+    border: 0;
+    @include transition(.3s);
+
+    &:link, &:visited {
+        color: #fff;
+    }
+
+    &:hover, &:focus {
+
+    }
+
+    &:active {
+
+    }
+}
+
+img {
+    max-width: 100%;
+    width: auto;
+    height: auto;
+}
