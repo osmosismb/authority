@@ -1,0 +1,55 @@
+
+// Compass settings
+// ================
+$browser-default-font-size: 16px;
+$base-font-size: 15px; // Set the base font size for the site's body text.
+
+@import 'susy';
+
+// Grid/layout settings
+// =============
+// Gutters
+$gutter-width: 15px;
+
+// Susy
+$susy: (
+  flow: ltr,
+  output: float,
+  math: fluid,
+  column-width: 80px,
+  container: auto,
+  container-position: center,
+  last-flow: to,
+  columns: 12,
+  gutters: 3/10,
+  gutter-position: after,
+  global-box-sizing: content-box,
+);
+
+
+// Fonts
+// Colour pallette
+// ===============
+$header_background: #222126;
+$dark_background: #4E584F;
+$body_background: rgb(237, 237, 237);
+$block_background: rgb(252, 252, 252);
+$light_background: rgb(242, 242, 242);
+$grey_background: rgb(232, 232, 232);
+$button_background: #798D7C;
+
+$dark_copy: #5D5E5E;
+$header_copy: rgb(250, 250, 250);
+$body_copy: rgb(10, 10, 10);
+
+// Font settings
+// ===============
+$base-font-family: 'Roboto', sans-serif;
+$header-font-family: $base-font-family;
+$v-spacing: $gutter-width;
+$v-spacing-half: $v-spacing / 2;
+$v-spacing-double: $v-spacing * 2;
+$v-spacing-triple: $v-spacing * 3;
+$v-spacing-quarter: $v-spacing / 4;
+$v-spacing-three-quarter: $v-spacing * .75;
+$v-spacing-eighth: $v-spacing / 8;

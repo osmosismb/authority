@@ -1,22 +1,41 @@
 ---
-- name: Install packages
-  yum: name={{ item }} state=present
+- name: Get common software properties
+  apt: name=software-properties-common state=present
+
+- name: Add HHVM repo
+  apt_repository:
+    repo: "deb http://dl.hhvm.com/ubuntu trusty main"
+    state: present
+    update_cache: yes
+
+- name: Install apt packages
+  apt:
+    name: "{{ item }}"
+    state: present
   with_items:
-    - httpd
-    - MySQL-python
+    - build-essential
+    - tcl8.5
+    - nginx
     - mysql-server
-    - php
-    - php-mysql
-    - phpMyAdmin
+    - hhvm
+    - python-dev
+    - python-pip
+    - libmysqlclient-dev
+    - redis-server
   notify:
-    - restart mysqld
-    - restart httpd
+    - restart mysql
+    - restart redis
+    - restart nginx
+
+- name: Install pip packages
+  pip: name=MySQL-python
 
 - name: Start services
   service: name={{ item }} state=started
   with_items:
-    - httpd
-    - mysqld
+    - nginx
+    - redis-server
+    - mysql
 
 - name: Add MySQL user
   mysql_user:
@@ -40,25 +59,33 @@
     state: import
     target: /vagrant/schemas/users.sql
 
-- name: Add vhost config
-  copy: src=vhost.conf dest=/etc/httpd/conf.d/00-osmosis-auth.conf mode=0644
-
-- name: Create vhost directory
-  file: path=/var/www/vhosts/osmosis.authority state=directory
-
-- name: Check existing app directory
-  stat: path=/var/www/vhosts/osmosis.authority/httpdocs
-  register: app_dir
-
-- name: Remove existing app directory
-  file: path=/var/www/vhosts/osmosis.authority/httpdocs state=absent
-  when: app_dir.stat.exists == True
-
 - name: Create app config directory
   file: path=/etc/osm state=directory
 
 - name: Add app config
   copy: src=conf.ini dest=/etc/osm/conf.ini mode=0644
 
-- name: Copy app folder
-  command: cp -r /vagrant/httpdocs /var/www/vhosts/osmosis.authority/httpdocs
+- name: Check existing app directory
+  stat: path=/usr/share/nginx/html
+  register: app_dir
+
+- name: Remove existing app directory
+  file: path=/usr/share/nginx/html state=absent
+  when: app_dir.stat.exists == True
+
+# - name: Copy app folder
+#   sudo: yes
+#   command: cp -r /vagrant/httpdocs/* /usr/share/nginx/html
+
+# - name: Sync app folder
+#   synchronize:
+#     src: ../httpdocs/
+#     dest: /usr/share/nginx/html/
+#     recursive: yes
+
+- name: Symlink root html folder with app directory
+  file: dest=/usr/share/nginx/html src=/vagrant/httpdocs state=link force=yes
+
+
+- name: Run HHVM setup script
+  command: sudo /usr/share/hhvm/install_fastcgi.sh

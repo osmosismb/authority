@@ -1,10 +1,11 @@
 import React from 'react';
 import { DefaultRoute, Route } from 'react-router';
 
-import Root, { App } from '../Views/Layouts';
+import Root, { Home, Login } from '../Views/Layouts';
 
 export default (
   <Route name="root" path="/" handler={Root}>
-    <DefaultRoute handler={App}/>
+    <Route name="login" path="/login" handler={Login}/>
+    <DefaultRoute handler={Home}/>
   </Route>
 );

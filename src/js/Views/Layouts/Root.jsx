@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { RouteHandler } from 'react-router';
-import Router from '../../Router';
+
+import { Header } from '../Components';
 
 export default class Root extends Component {
   constructor(props) {
@@ -8,6 +9,13 @@ export default class Root extends Component {
   }
 
   render() {
-    return <RouteHandler/>;
+    return (
+      <div className="app">
+        <Header/>
+        <div className="page p-v--double">
+          <RouteHandler/>
+        </div>
+      </div>
+    );
   }
 }

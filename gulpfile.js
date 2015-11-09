@@ -3,6 +3,7 @@ var browserify = require('browserify');
 var babelify = require('babelify');
 var source = require('vinyl-source-stream');
 var uglify = require('gulp-uglify');
+var minify = require('gulp-minify-css');
 var streamify = require('gulp-streamify');
 var rimraf = require('gulp-rimraf');
 var ignore = require('gulp-ignore');
@@ -35,6 +36,7 @@ gulp.task('styles', function() {
             this.emit('end');
         })
         .pipe(sass({ errLogToConsole: true }))
+        .pipe(minify())
         .pipe(gulp.dest('httpdocs'));
 });
 

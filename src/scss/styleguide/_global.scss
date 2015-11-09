@@ -1,0 +1,87 @@
+* {
+  margin-top: 0;
+}
+
+html {
+  overflow: scroll!important;
+}
+
+body {
+  font-size: rem($base-font-size);
+  line-height: 1.5;
+  font-family: $base-font-family;
+  font-weight: 100;
+  color: $body_copy;
+  background: $body_background;
+}
+
+p, blockquote, table, hr, pre {
+  margin-bottom: rem($v-spacing);
+}
+
+// Misc global styles
+.spacer-bottom {
+    margin-bottom:rem($v-spacing);
+}
+
+.no-display {
+    display: none;
+}
+
+.inline-block {
+    display: inline-block;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.margin-center {
+  margin: 0 auto;
+}
+
+.border-top--dark {
+  border-top: 1px solid $dark_background;
+}
+
+.border-bottom--dark {
+  border-bottom: 1px solid $dark_background;
+}
+
+.border-top--grey {
+  border-top: 1px solid $grey_background;
+}
+
+.border-bottom--grey {
+  border-bottom: 1px solid $grey_background;
+}
+
+.p-v {
+  padding-top: rem($v-spacing);
+  padding-bottom: rem($v-spacing);
+}
+
+.p-h {
+  padding-left: rem($v-spacing);
+  padding-right: rem($v-spacing);
+}
+
+.p-v--half {
+  padding-top: rem($v-spacing-half);
+  padding-bottom: rem($v-spacing-half);
+}
+
+.p-h--half {
+  padding-left: rem($v-spacing-half);
+  padding-bottom: rem($v-spacing-half);
+}
+
+.p-v--double {
+  padding-top: rem($v-spacing-double);
+  padding-bottom: rem($v-spacing-double);
+}
+
+.p-h--double {
+  padding-left: rem($v-spacing-double);
+  padding-right: rem($v-spacing-double);
+}

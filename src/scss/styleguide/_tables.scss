@@ -1,0 +1,15 @@
+table {
+    border: 1px solid #000;
+    border-collapse: collapse;
+}
+
+th {
+    font-weight: 300;
+    background: #000;
+    padding: rem($v-spacing-half);
+}
+
+td {
+    padding: rem($v-spacing-half);
+    border: 1px solid #000;
+}

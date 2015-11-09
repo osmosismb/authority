@@ -1,9 +1,11 @@
 /vendor/
 /conf.ini
 .vagrant/
+.sass-cache/
 node_modules/
 httpdocs/vendor/
 httpdocs/templates/
 httpdocs/src/
 httpdocs/app.min.js
+httpdocs/styles.css
 .DS_Store

@@ -17,7 +17,7 @@ class AuthStore
 
     $conn = $this->generateConnectionString($host, $db);
     $this->connection = new \PDO($conn, $user, $pass);
-    $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $this->connection->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
   }
 
   public static function generateConnectionString($host, $db, $charset = 'utf8')
@@ -50,7 +50,7 @@ class AuthStore
     $cmd = $this->connection->prepare($query);
     $cmd->execute($params);
 
-    $result = $cmd->fetch(PDO::FETCH_OBJ);
+    $result = $cmd->fetch(\PDO::FETCH_OBJ);
     if (!$result) {
       throw new \ErrorException('User not found.');
     }

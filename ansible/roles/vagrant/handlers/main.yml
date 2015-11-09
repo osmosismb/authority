@@ -1,8 +1,12 @@
 ---
-- name: restart httpd
+- name: restart nginx
   sudo: yes
-  service: name=httpd state=restarted
+  service: name=nginx state=restarted
 
-- name: restart mysqld
+- name: restart mysql
   sudo: yes
-  service: name=mysqld state=restarted
+  service: name=mysql state=restarted
+
+- name: restart redis
+  sudo: yes
+  service: name=redis-server state=restarted

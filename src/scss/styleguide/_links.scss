@@ -1,0 +1,18 @@
+a {
+  @include transition(.3s);
+  display: block;
+
+  &:link, &:visited {
+    color: $button_background;
+    text-decoration: none;
+  }
+
+  &:hover, &:focus {
+    color: $dark_background;
+    cursor: pointer;
+  }
+
+  &:active {
+    color: $button_background;
+  }
+}

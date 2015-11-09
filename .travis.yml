@@ -2,7 +2,8 @@ language: php
 sudo: required
 
 services:
-  - docker
+  - mysql
+  - redis-server
 
 php:
   - 5.4
@@ -12,16 +13,10 @@ php:
   - hhvm
   - nightly
 
-install:
-  - docker login --email=$DOCKER_HUB_EMAIL --username=$DOCKER_HUB_USERNAME --password=$DOCKER_HUB_PASSWORD
-
-before_script: composer install
+before_script:
+  - mysql -e 'create database osm_auth;'
+  - composer install
 
 script:
   - ./scripts/config.sh
-  - phpunit --configuration tests/phpunit.xml
-  - docker build -t $DOCKER_IMAGE_NAME .
-  - if [ ! -z "$TRAVIS_TAG" ]; then docker tag $DOCKER_IMAGE_NAME:latest $DOCKER_IMAGE_NAME:$TRAVIS_TAG; fi && docker push $DOCKER_IMAGE_NAME
-
-env:
-  - DOCKER_IMAGE_NAME=osmosis/authority
+  - phpunit --configuration tests/php/phpunit.xml
