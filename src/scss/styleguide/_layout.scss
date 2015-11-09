@@ -1,0 +1,33 @@
+* {
+	@include box-sizing(border-box);
+}
+
+.container, .page {
+	@include container;
+	overflow: hidden;
+
+	@if $ltie9 == true {
+		padding:0 $v-spacing-half;
+	}
+}
+
+header {
+	width: 100%;
+	padding: rem($v-spacing) 0;
+	overflow: hidden;
+  background: $header_background;
+  color: $header_copy;
+  border-bottom: 5px solid $dark_background;
+
+  h1 {
+    margin-bottom: 0;
+  }
+}
+
+footer {
+	width: 100%;
+	padding: rem($v-spacing) 0;
+	overflow: hidden;
+  background: $dark_background;
+  background: $header_copy;
+}

@@ -12,7 +12,7 @@ export default class Root extends Component {
     return (
       <div className="app">
         <Header/>
-        <div className="page">
+        <div className="page p-v--double">
           <RouteHandler/>
         </div>
       </div>

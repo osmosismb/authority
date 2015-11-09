@@ -66,8 +66,8 @@ label {
 
 button, input[type="submit"],
 .button, %button {
-    background: #6db5e5;
-    color: #fff;
+    background: $button_background;
+    color: $header_copy;
     font-weight: 300;
     line-height: 1.39;
     text-align: center;
@@ -80,11 +80,11 @@ button, input[type="submit"],
     }
 
     &:hover, &:focus {
-
+      background: $dark_background;
     }
 
     &:active {
-
+      background: $dark_background;
     }
 }
 
@@ -92,4 +92,13 @@ img {
     max-width: 100%;
     width: auto;
     height: auto;
+}
+
+.form__footer {
+  @extend .clearfix;
+  background: $light_background;
+
+  button[name="submit"] {
+    float: right;
+  }
 }

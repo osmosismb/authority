@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router';
 
 export default class RegisterForm extends Component {
   constructor(props) {
@@ -35,9 +36,14 @@ export default class RegisterForm extends Component {
 
   render() {
     return (
-      <form className="form--register">
-        <div className="form--register__content form__content">
+      <form className="form--register block width-6 margin-center">
+        <div className="form--register__content form__content p-v p-h">
           <h3>Register</h3>
+          <Link
+            className="form--register__login"
+            to="login">
+            Already have an account? Login here.
+          </Link>
           <input className="form--register__email"
             placeholder="Email"
             type="text"
@@ -51,7 +57,7 @@ export default class RegisterForm extends Component {
             type="password"
             onChange={this.onPasswordChange} />
         </div>
-        <div className="form--register__footer form__footer">
+        <div className="form--register__footer form__footer border-top--grey p-v p-h">
           <button className="form--register__submit"
             name="submit"
             value="submit"

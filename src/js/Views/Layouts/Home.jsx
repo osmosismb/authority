@@ -18,8 +18,11 @@ export default class Home extends Component {
   render() {
     return (
       <div className="page__home">
-        <RegisterForm ref="RegisterForm" onSubmit={this.onSubmit} />
+        <div className="page--content">
+          <RegisterForm ref="RegisterForm"
+            onSubmit={this.onSubmit} />
+        </div>
       </div>
-    )
+    );
   }
 }

@@ -9,7 +9,8 @@ $base-font-size: 15px; // Set the base font size for the site's body text.
 // Grid/layout settings
 // =============
 // Gutters
-$gutter-width: 24px;
+$gutter-width: 15px;
+
 // Susy
 $susy: (
   flow: ltr,
@@ -29,22 +30,22 @@ $susy: (
 // Fonts
 // Colour pallette
 // ===============
-$body_copy: rgb(0, 0, 0);
-$body_background: rgb(255, 255, 255);
+$header_background: #222126;
+$dark_background: #4E584F;
+$body_background: rgb(237, 237, 237);
+$block_background: rgb(252, 252, 252);
+$light_background: rgb(242, 242, 242);
+$grey_background: rgb(232, 232, 232);
+$button_background: #798D7C;
 
-$header_copy: rgb(255, 255, 255);
-$header_background: #363E3F;
-
-$dark_background: #1A1E1E;
 $dark_copy: #5D5E5E;
-
-$green: #01982C;
-$blue: #6DB6E5;
+$header_copy: rgb(250, 250, 250);
+$body_copy: rgb(10, 10, 10);
 
 // Font settings
 // ===============
-$base-font-family: 'Open Sans', sans-serif;
-$header-font-family: 'Pacifico', cursive;
+$base-font-family: 'Roboto', sans-serif;
+$header-font-family: $base-font-family;
 $v-spacing: $gutter-width;
 $v-spacing-half: $v-spacing / 2;
 $v-spacing-double: $v-spacing * 2;

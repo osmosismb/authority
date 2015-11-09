@@ -19,7 +19,7 @@ before_script: composer install
 
 script:
   - ./scripts/config.sh
-  - phpunit --configuration tests/phpunit.xml
+  - phpunit --configuration tests/php/phpunit.xml
   - docker build -t $DOCKER_IMAGE_NAME .
   - if [ ! -z "$TRAVIS_TAG" ]; then docker tag $DOCKER_IMAGE_NAME:latest $DOCKER_IMAGE_NAME:$TRAVIS_TAG; fi && docker push $DOCKER_IMAGE_NAME
 
