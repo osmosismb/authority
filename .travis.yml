@@ -13,7 +13,9 @@ php:
   - hhvm
   - nightly
 
-before_script: composer install
+before_script:
+  - mysql -e 'create database osm_auth;'
+  - composer install
 
 script:
   - ./scripts/config.sh
