@@ -7,22 +7,14 @@ class Application
 {
   protected $app;
 
-  protected $session;
+  protected $config;
 
   protected $authStore;
 
   public function __construct()
   {
     $this->app = new \Slim\Slim();
-
-    // $this->session =
-    //   new Slim\Middleware\Slim_Middleware_SessionRedis(array(
-    //     'session.expires' => 3600,
-    //     'session.id' => $_COOKIE['session_cookie'],
-    //     'session.name' => 'session_cookie'
-    //   ));
-    //
-    // $this->app->add($this->session);
+    $this->initialize(new Config());
   }
 
   public function setupRoutes()
@@ -111,5 +103,27 @@ class Application
   public function run()
   {
     $this->app->run();
+  }
+
+  private function initialize($config)
+  {
+    $authStore = new AuthStore(
+      $config->get('db_host'),
+      $config->get('db_name'),
+      $config->get('db_user'),
+      $config->get('db_pass')
+    );
+
+    $cache = new \Predis\Client($config->get('cache_host'),
+      array(
+        'prefix' => $this->app->environment['SERVER_NAME']
+      )
+    );
+
+    $this->app->add(new \Slim\Middleware\RedisCache($cache,
+      array(
+        'timeout' => 28800
+      )
+    ));
   }
 }

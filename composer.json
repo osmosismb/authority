@@ -10,7 +10,8 @@
   ],
   "require": {
     "php": ">=5.4.0",
-    "slim/slim": "^2.6"
+    "slim/slim": "^2.6",
+    "abouvier/slim-redis-cache": "^0.1.0"
   },
   "require-dev": {
     "phpunit/phpunit": "4.1.3"
@@ -18,8 +19,7 @@
   "autoload": {
     "psr-0": {
       "Core\\": "src/php/",
-      "Data\\": "src/php/",
-      "Slim\\": "src/php/"
+      "Data\\": "src/php/"
     }
   }
 }
