@@ -1,6 +1,10 @@
 language: php
 sudo: required
 
+services:
+  - mysql
+  - redis-server
+
 php:
   - 5.4
   - 5.5
