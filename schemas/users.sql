@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `username` varchar(50) NOT NULL,
   `password` CHAR(128) NOT NULL,
-  `salt` CHAR(128) NOT NULL,
+  `email` CHAR(128) NOT NULL,
   `token` varchar(255) NOT NULL,
   `date_created` datetime NOT NULL,
   `date_modified` datetime DEFAULT NULL,

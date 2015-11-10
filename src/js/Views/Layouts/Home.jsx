@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import superagent from 'superagent';
 
 import { RegisterForm } from '../Forms';
 
@@ -13,6 +14,21 @@ export default class Home extends Component {
     e.preventDefault();
 
     let form = this.refs.RegisterForm;
+    superagent.post('/register')
+      .send({
+        username: form.state.username,
+        password: form.state.password,
+        email: form.state.email
+      })
+      .set('Accept', 'application/json')
+      .end(function(err, res) {
+        if (!res.ok) {
+          console.log(err);
+          return;
+        }
+
+        console.log(JSON.stringify(res.body));
+      });
   }
 
   render() {

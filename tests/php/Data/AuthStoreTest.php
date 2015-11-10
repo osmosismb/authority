@@ -5,58 +5,47 @@ use Data\AuthStore;
 
 class AuthStoreTest extends \PHPUnit_Framework_TestCase
 {
-  public function testConnectionString()
-  {
-    $conn = AuthStore::generateConnectionString('test', 'test');
+  protected $store;
 
-    $this->assertEquals($conn, 'mysql:host=test;dbname=test;charset=utf8');
+  public function setUp()
+  {  
+    $this->store =
+      new AuthStore('127.0.0.1', 'osm_auth', 'root', '', 'users_test');
+    $conn = $this->store->getConnection();
+    $conn->exec('DROP TABLE IF EXISTS `users_test`');
+
+    $create = 'CREATE TABLE IF NOT EXISTS `users_test`';
+    $cols = array(
+      "`id` int(10) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY",
+      "`username` varchar(50) NOT NULL",
+      "`password` CHAR(128) NOT NULL",
+      "`email` CHAR(128) NOT NULL",
+      "`token` varchar(255) NOT NULL",
+      "`date_created` datetime NOT NULL",
+      "`date_modified` datetime DEFAULT NULL",
+      "`date_logged_in` datetime DEFAULT NULL",
+      "`reputation_positive` int(10) unsigned NOT NULL DEFAULT '0'",
+      "`reputation_negative` int(10) unsigned NOT NULL DEFAULT '0'",
+    );
+
+    $create .= '(' . implode(',', $cols) . ');';
+    $conn->exec($create);
+
+    parent::setUp();
   }
 
-  /**
-  * @expectedException PDOException
-  */
-  public function testConnectionFail()
+  public function testRegisterSuccess()
   {
-    $auth = new AuthStore('localhost', 'doesnt_exist', 'root', 'root');
+    $this->store->register('test', 'test', 'test@test.com');
+
+    $this->assertEquals(
+      $this->store->checkUserExists('test'), true);
   }
 
-  /**
-  * @expectedException ErrorException
-  */
-  public function testConnectUserException()
+  public function tearDown()
   {
-    $auth = new AuthStore('localhost', 'osm_auth', NULL, 'root');
-  }
-
-  /**
-  * @expectedException ErrorException
-  */
-  public function testConnectPassException()
-  {
-    $auth = new AuthStore('localhost', 'osm_auth', 'root', NULL);
-  }
-
-  /**
-  * @expectedException ErrorException
-  */
-  public function testConnectionStringHostException()
-  {
-    $conn = AuthStore::generateConnectionString(NULL, 'test');
-  }
-
-  /**
-  * @expectedException ErrorException
-  */
-  public function testConnectionStringDbException()
-  {
-    $conn = AuthStore::generateConnectionString('test', NULL);
-  }
-
-  /**
-  * @expectedException ErrorException
-  */
-  public function testConnectionStringCharsetException()
-  {
-    $conn = AuthStore::generateConnectionString('test', 'test', NULL);
+    $conn = $this->store->getConnection();
+    $conn->exec('DROP TABLE IF EXISTS `users_test`');
+    parent::tearDown();
   }
 }

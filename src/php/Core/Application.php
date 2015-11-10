@@ -60,12 +60,6 @@ class Application
       $request = Slim::getInstance()->request();
       $body = json_decode($request->getBody());
 
-      if (!isset($body['username']) ||
-          !isset($body['password']) ||
-          !isset($body['email'])) {
-        throw new \ErrorException('Missing fields for user registration.');
-      }
-
       $response = $app->response();
       $response['Content-Type'] = 'application/json';
 
@@ -89,6 +83,12 @@ class Application
       $response->body(json_encode(array(
         'success' => true
       )));
+    });
+
+    $app->get('/auth', function() {
+      // check session for user
+
+      // return auth token if successful
     });
 
     $app->get('/api/users/', function() {

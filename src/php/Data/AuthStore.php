@@ -4,8 +4,9 @@ namespace Data;
 class AuthStore
 {
   protected $connection;
+  protected $userTable;
 
-  public function __construct($host, $db, $user, $pass)
+  public function __construct($host, $db, $user, $pass, $table = 'users')
   {
     if (!isset($user) || !is_string($user)) {
       throw new \ErrorException('Invalid user for AuthStore connection.');
@@ -18,6 +19,8 @@ class AuthStore
     $conn = $this->generateConnectionString($host, $db);
     $this->connection = new \PDO($conn, $user, $pass);
     $this->connection->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+
+    $this->userTable = $table;
   }
 
   public static function generateConnectionString($host, $db, $charset = 'utf8')
@@ -62,5 +65,72 @@ class AuthStore
     }
 
     return $result['token'];
+  }
+
+  public function register($user, $pass, $email)
+  {
+    if (!isset($user) ||
+        !isset($pass) ||
+        !isset($email)) {
+      throw new \ErrorException('Missing fields for user registration.');
+    }
+
+    if ($this->checkUserExists($user)) {
+      throw new \ErrorException('User already exists.');
+    }
+
+    $query = 'SELECT username FROM ' . $this->userTable . ' WHERE username = :user';
+    $params = array(
+      ':user' => $user
+    );
+
+    $cmd = $this->connection->prepare($query);
+    $cmd->execute($params);
+
+    $result = $cmd->fetch(\PDO::FETCH_OBJ);
+    if ($result) {
+      throw new \ErrorException('User already exists.');
+    }
+
+    $pass = password_hash($pass, PASSWORD_BCRYPT);
+    $token = uniqid();
+
+    $query = 'INSERT INTO ' . $this->userTable .
+      ' (username, password, email, token, date_created, reputation_positive, reputation_negative)' .
+      'VALUES (:user, :pass, :email, :token, :date, 0, 0)';
+    $params = array(
+      ':user' => $user,
+      ':pass' => $pass,
+      ':email' => $email,
+      ':token' => $token,
+      ':date' => date("Y-m-d H:i:s")
+    );
+
+    $cmd = $this->connection->prepare($query);
+    $cmd->execute($params);
+  }
+
+  public function checkUserExists($user)
+  {
+    $query = 'SELECT username FROM ' . $this->userTable .
+      ' WHERE username = :user';
+    $params = array(
+      ':user' => $user
+    );
+
+    $cmd = $this->connection->prepare($query);
+    $cmd->execute($params);
+
+    $result = $cmd->fetch(\PDO::FETCH_OBJ);
+    if ($result) {
+      return true;
+    }
+
+    return false;
+  }
+
+  public function getConnection()
+  {
+    return $this->connection;
   }
 }
