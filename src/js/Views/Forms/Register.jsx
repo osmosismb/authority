@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Link } from 'react-router';
 
-export default class RegisterForm extends Component {
+export default class RegisterForm extends React.Component {
   constructor(props) {
     super(props);
 
@@ -36,29 +36,29 @@ export default class RegisterForm extends Component {
 
   render() {
     return (
-      <form className="form--register block width-6 margin-center">
-        <div className="form--register__content form__content p-v p-h">
+      <form className="frm--reg block width-6 m-c">
+        <div className="frm--reg__ctnt frm__ctnt p-v p-h">
           <h3>Register</h3>
           <Link
-            className="form--register__login"
+            className="frm--reg__login"
             to="login">
             Already have an account? Login here.
           </Link>
-          <input className="form--register__email"
+          <input className="frm--reg__email"
             placeholder="Email"
             type="text"
             onChange={this.onEmailChange} />
-          <input className="form--register__username"
+          <input className="frm--reg__username"
             placeholder="Username"
             type="text"
             onChange={this.onUsernameChange} />
-          <input className="form--register__password"
+          <input className="frm--reg__password"
             placeholder="Password"
             type="password"
             onChange={this.onPasswordChange} />
         </div>
-        <div className="form--register__footer form__footer border-top--grey p-v p-h">
-          <button className="form--register__submit"
+        <div className="frm--reg__foot frm__foot b-t--grey p-v p-h">
+          <button className="frm--reg__submit"
             name="submit"
             value="submit"
             onClick={this.props.onSubmit}>
@@ -66,6 +66,6 @@ export default class RegisterForm extends Component {
           </button>
         </div>
       </form>
-    )
+    );
   }
 }

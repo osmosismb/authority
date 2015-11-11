@@ -36,23 +36,23 @@ p, blockquote, table, hr, pre {
     width: 100%;
 }
 
-.margin-center {
+.m-c {
   margin: 0 auto;
 }
 
-.border-top--dark {
+.b-t--dark {
   border-top: 1px solid $dark_background;
 }
 
-.border-bottom--dark {
+.b-b--dark {
   border-bottom: 1px solid $dark_background;
 }
 
-.border-top--grey {
+.b-t--grey {
   border-top: 1px solid $grey_background;
 }
 
-.border-bottom--grey {
+.b-b--grey {
   border-bottom: 1px solid $grey_background;
 }
 

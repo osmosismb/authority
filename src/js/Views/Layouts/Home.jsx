@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React from 'react';
 import superagent from 'superagent';
 
-import { RegisterForm } from '../Forms';
+import RegisterForm from '../Forms/Register';
 
-export default class Home extends Component {
+export default class Home extends React.Component {
   constructor(props) {
     super(props);
 

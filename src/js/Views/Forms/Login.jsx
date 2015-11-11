@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Link } from 'react-router';
 
-export default class LoginForm extends Component {
+export default class LoginForm extends React.Component {
   constructor(props) {
     super(props);
 
@@ -28,21 +28,21 @@ export default class LoginForm extends Component {
 
   render() {
     return (
-      <form className="form--login block width-6 margin-center">
-        <div className="form--login__content form__content p-v p-h">
+      <form className="frm--login block width-6 m-c">
+        <div className="frm--login__ctnt frm__ctnt p-v p-h">
           <h3>Please login.</h3>
-          <Link to="root">Don't have an account? Register here.</Link>
-          <input className="form--login__username"
+          <Link to="home">Don't have an account? Register here.</Link>
+          <input className="frm--login__username"
             placeholder="Username"
             type="text"
             onChange={this.onUsernameChange} />
-          <input className="form--login__password"
+          <input className="frm--login__password"
             placeholder="Password"
             type="password"
             onChange={this.onPasswordChange} />
         </div>
-        <div className="form--login__footer form__footer border-top--grey p-v p-h">
-          <button className="form--login__submit form__submit"
+        <div className="frm--login__foot frm__foot b-t--grey p-v p-h">
+          <button className="frm--login__submit frm__submit"
             name="submit"
             value="submit"
             onClick={this.props.onSubmit}>
@@ -50,6 +50,6 @@ export default class LoginForm extends Component {
           </button>
         </div>
       </form>
-    )
+    );
   }
 }

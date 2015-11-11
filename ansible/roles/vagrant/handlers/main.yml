@@ -10,3 +10,7 @@
 - name: restart redis
   sudo: yes
   service: name=redis-server state=restarted
+
+- name: restart hhvm
+  sudo: yes
+  service: name=hhvm state=restarted

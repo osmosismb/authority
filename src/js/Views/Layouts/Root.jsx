@@ -1,9 +1,7 @@
-import React, { Component } from 'react';
-import { RouteHandler } from 'react-router';
+import React from 'react';
+import Header from '../Components/Header';
 
-import { Header } from '../Components';
-
-export default class Root extends Component {
+export default class Root extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -13,7 +11,7 @@ export default class Root extends Component {
       <div className="app">
         <Header/>
         <div className="page p-v--double">
-          <RouteHandler/>
+          {this.props.children}
         </div>
       </div>
     );

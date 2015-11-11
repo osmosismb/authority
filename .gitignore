@@ -7,5 +7,8 @@ httpdocs/vendor/
 httpdocs/templates/
 httpdocs/src/
 httpdocs/app.min.js
+httpdocs/app.min.js.map
 httpdocs/styles.css
 .DS_Store
+composer.lock
+Gemfile.lock

@@ -1,43 +1,41 @@
 var gulp = require('gulp');
-var browserify = require('browserify');
-var babelify = require('babelify');
-var source = require('vinyl-source-stream');
-var uglify = require('gulp-uglify');
-var minify = require('gulp-minify-css');
-var streamify = require('gulp-streamify');
+
+// Gulp utils
+var gutil = require('gulp-util');
 var rimraf = require('gulp-rimraf');
 var ignore = require('gulp-ignore');
 
+// SCSS/Compass
 var compass = require('gulp-compass');
 var sass = require('gulp-sass');
+var minify = require('gulp-minify-css');
 
-gulp.task('scripts', function() {
-  browserify({
-    entries: 'src/js/index.jsx',
-    extensions: ['.jsx', '.js'],
-    debug: true
-  })
-    .transform(babelify)
-    .bundle()
-    .pipe(source('app.min.js'))
-    .pipe(streamify(uglify()))
-    .pipe(gulp.dest('httpdocs'));
+// Webpack
+var webpack = require('webpack');
+var wbConfig = require('./webpack.config.js');
+
+gulp.task('scripts', function(cb) {
+  webpack(wbConfig, function (err, stats) {
+    if(err) throw new gutil.PluginError("webpack", err);
+    gutil.log("[webpack]", stats.toString());
+    cb();
+  });
 });
 
 gulp.task('styles', function() {
-    return gulp.src('src/scss/**/*.scss')
-        .pipe(compass({
-            config_file: 'config.rb',
-            css: 'httpdocs',
-            sass: 'src/scss',
-            bundle_exc: true
-        }))
-        .on('error', function(err) {
-            this.emit('end');
-        })
-        .pipe(sass({ errLogToConsole: true }))
-        .pipe(minify())
-        .pipe(gulp.dest('httpdocs'));
+  return gulp.src('src/scss/**/*.scss')
+    .pipe(compass({
+      config_file: 'config.rb',
+      css: 'httpdocs',
+      sass: 'src/scss',
+      bundle_exc: true
+    }))
+    .on('error', function(err) {
+      this.emit('end');
+    })
+    .pipe(sass({ errLogToConsole: true }))
+    .pipe(minify())
+    .pipe(gulp.dest('httpdocs'));
 });
 
 gulp.task('clean', function() {
@@ -47,17 +45,17 @@ gulp.task('clean', function() {
 });
 
 gulp.task('watch', function() {
-    gulp.watch([
-        'src/js/**/*.jsx',
-        'src/js/**/*.js',
-        'src/js/index.jsx'
-    ], {
-        interval: 500
-    }, function() {
-        gulp.start('scripts');
-    });
+  gulp.watch([
+    'src/js/**/*.jsx',
+    'src/js/**/*.js',
+    'src/js/index.jsx'
+  ], {
+    interval: 500
+  }, function() {
+    gulp.start('scripts');
+  });
 
-    gulp.watch('src/scss/**/*.scss', ['styles']);
+  gulp.watch('src/scss/**/*.scss', ['styles']);
 });
 
 gulp.task('build', ['styles', 'scripts'], function() {

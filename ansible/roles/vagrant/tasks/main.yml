@@ -12,6 +12,7 @@
   apt:
     name: "{{ item }}"
     state: present
+    force: yes
   with_items:
     - build-essential
     - tcl8.5
@@ -26,6 +27,12 @@
     - restart mysql
     - restart redis
     - restart nginx
+    - restart hhvm
+
+- name: Add nginx config
+  copy: src=default dest=/etc/nginx/sites-available/default mode=0644
+  notify:
+    - restart nginx
 
 - name: Install pip packages
   pip: name=MySQL-python
@@ -36,6 +43,7 @@
     - nginx
     - redis-server
     - mysql
+    - hhvm
 
 - name: Add MySQL user
   mysql_user:
@@ -73,19 +81,11 @@
   file: path=/usr/share/nginx/html state=absent
   when: app_dir.stat.exists == True
 
-# - name: Copy app folder
-#   sudo: yes
-#   command: cp -r /vagrant/httpdocs/* /usr/share/nginx/html
-
-# - name: Sync app folder
-#   synchronize:
-#     src: ../httpdocs/
-#     dest: /usr/share/nginx/html/
-#     recursive: yes
-
 - name: Symlink root html folder with app directory
   file: dest=/usr/share/nginx/html src=/vagrant/httpdocs state=link force=yes
 
-
 - name: Run HHVM setup script
   command: sudo /usr/share/hhvm/install_fastcgi.sh
+  notify:
+    - restart nginx
+    - restart hhvm

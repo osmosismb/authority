@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React from 'react';
 
-import { LoginForm } from '../Forms';
+import LoginForm from '../Forms/Login';
 
-export default class Home extends Component {
+export default class Home extends React.Component {
   constructor(props) {
     super(props);
 
@@ -20,6 +20,6 @@ export default class Home extends Component {
       <div className="page__home">
         <LoginForm ref="LoginForm" onSubmit={this.onSubmit} />
       </div>
-    )
+    );
   }
 }
